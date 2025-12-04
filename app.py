@@ -2,9 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import numpy as np
-import os
 
 # ===== KONFIGURASI PAGE =====
 st.set_page_config(
@@ -75,10 +73,11 @@ def categorize_report(row):
 def load_and_process_data():
     try:
         # Load data langsung dari root folder
-        st.info("Loading data 2024...")
-        df24 = pd.read_excel("LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx", engine='openpyxl')
-        st.info("Loading data 2025...")
-        df25 = pd.read_excel("LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx", engine='openpyxl')
+        with st.spinner("📂 Loading data 2024..."):
+            df24 = pd.read_excel("LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx", engine='openpyxl')
+        
+        with st.spinner("📂 Loading data 2025..."):
+            df25 = pd.read_excel("LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx", engine='openpyxl')
         
         df24["Tahun"] = 2024
         df25["Tahun"] = 2025
@@ -110,27 +109,31 @@ def load_and_process_data():
             lambda x: "Tidak Valid" if x in ["prank", "ghost", "silent call"] else "Valid"
         )
         
+        st.success("✅ Data berhasil dimuat!")
         return df24, df25, None
     except FileNotFoundError as e:
-        return None, None, "File tidak ditemukan. Pastikan file Excel ada di folder root"
+        return None, None, f"❌ File Excel tidak ditemukan. Pastikan nama file sesuai: {str(e)}"
     except Exception as e:
-        return None, None, f"Error: {str(e)}"
+        return None, None, f"❌ Error saat memuat data: {str(e)}"
 
 # ===== LOAD DATA =====
 df24, df25, error = load_and_process_data()
 
 if error:
-    st.error(f"❌ {error}")
+    st.error(error)
     st.info("""
-    ### 📁 Struktur folder yang dibutuhkan:
+    ### 📁 Pastikan file Excel ada di repository dengan nama:
+    - `LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx`
+    - `LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx`
+    
+    Struktur folder:
     ```
-    callcenter-dashboard/
+    repository/
     ├── app.py
     ├── requirements.txt
-    ├── README.md
-    └── data/
-        ├── LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx
-        └── LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx
+    ├── .python-version
+    ├── LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx
+    └── LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx
     ```
     """)
     st.stop()
