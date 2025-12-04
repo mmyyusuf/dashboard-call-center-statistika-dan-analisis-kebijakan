@@ -74,9 +74,11 @@ def categorize_report(row):
 @st.cache_data
 def load_and_process_data():
     try:
-        # Load data dari folder data/
-        df24 = pd.read_excel("LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx")
-        df25 = pd.read_excel("LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx")
+        # Load data langsung dari root folder
+        st.info("Loading data 2024...")
+        df24 = pd.read_excel("LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx", engine='openpyxl')
+        st.info("Loading data 2025...")
+        df25 = pd.read_excel("LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx", engine='openpyxl')
         
         df24["Tahun"] = 2024
         df25["Tahun"] = 2025
@@ -110,7 +112,7 @@ def load_and_process_data():
         
         return df24, df25, None
     except FileNotFoundError as e:
-        return None, None, "File tidak ditemukan. Pastikan file Excel ada di folder 'data/'"
+        return None, None, "File tidak ditemukan. Pastikan file Excel ada di folder root"
     except Exception as e:
         return None, None, f"Error: {str(e)}"
 
@@ -510,5 +512,4 @@ with tab5:
             data=csv_summary,
             file_name="summary_statistics.csv",
             mime="text/csv"
-
         )
