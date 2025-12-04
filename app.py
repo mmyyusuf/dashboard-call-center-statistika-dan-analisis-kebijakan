@@ -75,8 +75,8 @@ def categorize_report(row):
 def load_and_process_data():
     try:
         # Load data dari folder data/
-        df24 = pd.read_excel("data/LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx")
-        df25 = pd.read_excel("data/LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx")
+        df24 = pd.read_excel("LAPORAN INSIDEN CALL CENTER 112 TAHUN 2024.xlsx")
+        df25 = pd.read_excel("LAPORAN INSIDEN CALLCENTER 112 TAHUN 2025.xlsx")
         
         df24["Tahun"] = 2024
         df25["Tahun"] = 2025
@@ -510,4 +510,5 @@ with tab5:
             data=csv_summary,
             file_name="summary_statistics.csv",
             mime="text/csv"
+
         )
